@@ -21,7 +21,7 @@ def compute_frequencies(pair_counts):
 def compute_background_freq(sequences):
     counts = Counter("".join(sequences))
     total = sum(counts.values())
-    return {aa: c / total for aa, c in counts.items()}
+    return {item: c / total for item, c in counts.items()}
 
 def build_substitution_matrix(freqs, background_freqs):
     matrix = {}
@@ -51,15 +51,15 @@ def parse_labeled_sequences(file_path):
 def count_emissions(seqs, labels):
     emissions = {0: Counter(), 1: Counter(), 2: Counter()}
     for seq, label in zip(seqs, labels):
-        for param, state in zip(seq, label):
-            emissions[int(state)][param] += 1
+        for item, state in zip(seq, label):
+            emissions[int(state)][item] += 1
     return emissions
 
 def normalize_emissions(emissions):
     emission_probs = {}
     for state, counts in emissions.items():
         total = sum(counts.values())
-        emission_probs[state] = {aa: round(c / total, 4) for aa, c in counts.items()}
+        emission_probs[state] = {item: round(c / total, 4) for item, c in counts.items()}
     return emission_probs
 
 def compute_transitions(labels):
