@@ -26,11 +26,7 @@ def compute_background_freq(sequences):
 def build_substitution_matrix(freqs, background_freqs):
     matrix = {}
     for (a, b), observed in freqs.items():
-        expected = (
-            background_freqs[a] * background_freqs[b]
-            if a != b else
-            background_freqs[a] * background_freqs[b]
-        )
+        expected = background_freqs[a] * background_freqs[b]
         score = math.log2(observed / expected) if expected > 0 else float('-inf')
         matrix[(a, b)] = round(score, 2)
     return matrix
