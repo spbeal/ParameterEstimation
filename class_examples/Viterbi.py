@@ -24,7 +24,7 @@ aLF = 0.1 # loaded to fair
 
 vfair = []
 vloaded = []
-vfairP =[]
+vfairP =[] # collection of the probabilities at the current point to switch either to or from fair I believe
 vloadedP = []
 vfair.append(0.5)
 vloaded.append(0.5)
