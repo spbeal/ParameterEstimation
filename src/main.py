@@ -8,7 +8,8 @@ from collections import Counter
 from itertools import combinations
 import math
 
-############################
+#####################################################
+################### Project 3 #######################
 
 # Creates all the pair keys (i, a), (a, a) etc...
 def count_pairs(sequences):
@@ -151,8 +152,6 @@ def print_transition(transition_probs):
             print(f"{from_state} -> {to_state}: {prob}")
 
 
-############################
-
 # Part A
 sequence1 = read_sequences("../input/DataFile1-1.txt") # List, each index contains a row of the file
 pairs = count_pairs(sequence1)
@@ -171,4 +170,62 @@ print_substitution_matrix(sub_matrix)
 print_emission(emission_probs)
 print_transition(transition_probs)
 
-############################
+################### Project 3 #######################
+#####################################################
+
+
+
+
+
+#####################################################
+################### Project 4 #######################
+
+def read_sequences(file_path):
+    with open(file_path, 'r') as f:
+        sequences = [line.strip() for line in f if line.strip()]
+    return sequences
+
+sequences = read_sequences("../input/project4data-1.txt")
+
+
+def viterbi(sequence, emission_probs, transition_probs, states=[0, 1, 2]):
+    V = [{} for _ in range(len(sequence))]
+    path = {}
+
+    # Initialization
+    for state in states:
+        emission = emission_probs[state].get(sequence[0], 1e-10)
+        V[0][state] = math.log2(emission)
+        path[state] = [state]
+
+    # Recursion
+    for t in range(1, len(sequence)):
+        V.append({})
+        new_path = {}
+
+        for curr_state in states:
+            emission = emission_probs[curr_state].get(sequence[t], 1e-10)
+            emission_log = math.log2(emission)
+
+            (prob, prev_state) = max(
+                (V[t-1][prev_state] + math.log2(transition_probs.get((prev_state, curr_state), 1e-10)) + emission_log, prev_state)
+                for prev_state in states
+            )
+
+            V[t][curr_state] = prob
+            new_path[curr_state] = path[prev_state] + [curr_state]
+
+        path = new_path
+
+    # Termination
+    (prob, final_state) = max((V[len(sequence) - 1][state], state) for state in states)
+    return path[final_state]
+
+for idx, seq in enumerate(sequences):
+    path = viterbi(seq, emission_probs, transition_probs)
+    print(f"Sequence {idx+1}:")
+    print("".join(map(str, path)))
+    print()
+
+################### Project 4 #######################
+#####################################################
