@@ -187,7 +187,7 @@ def read_sequences(file_path):
 
 sequences = read_sequences("../input/project4data-1.txt")
 
-
+# uses the previous functions to get the emission and transition probabilities
 def viterbi(sequence, emission_probs, transition_probs, states=[0, 1, 2]):
     V = [{} for _ in range(len(sequence))]
     path = {}
@@ -221,6 +221,7 @@ def viterbi(sequence, emission_probs, transition_probs, states=[0, 1, 2]):
     (prob, final_state) = max((V[len(sequence) - 1][state], state) for state in states)
     return path[final_state]
 
+print()
 for idx, seq in enumerate(sequences):
     path = viterbi(seq, emission_probs, transition_probs)
     print(f"Sequence {idx+1}:")
